@@ -8,4 +8,5 @@ class Model extends BaseModel
 {
     protected string $table = 'todos';
     protected string $primaryKey = 'id_todo';
+    protected array $fields = ['name', 'description'];
 }

@@ -28,7 +28,12 @@ class DbConnection
     public function query(string $sql, array $params = []): PDOStatement
     {
         $query = $this->db->prepare($sql);
-        $query->execute();
+        $query->execute($params);
         return $query;
+    }
+
+    public function lastInsertId()
+    {
+        return $this->db->lastInsertId();
     }
 }
