@@ -14,10 +14,10 @@ class Router
         $this->basePath = $basePath;
     }
 
-    public function get(string $pattern, $class, string $method = 'index', array $params = []): void
+    public function addRoute(string $type, string $pattern, $class, string $method = 'index', array $params = []): void
     {
         $this->routes[] = [
-            'type' => 'GET',
+            'type' => $type,
             'pattern' => $pattern,
             'class' => $class,
             'method' => $method,
@@ -25,23 +25,11 @@ class Router
         ];
     }
 
-    public function post(string $pattern, $class, string $method = 'index', array $params = []): void
-    {
-        $this->routes[] = [
-            'type' => 'POST',
-            'pattern' => $pattern,
-            'class' => $class,
-            'method' => $method,
-            'params' => $params
-        ];
-    }
-
-    public function findRoute(string $url, string $httpMethod): array
+    public function findRoute(string $url, string $httpMethod)
     {
         $activeRoute = null;
 
         foreach ($this->routes as $route) {
-            $matches = [];
             if (preg_match($route['pattern'], $url, $matches) && strtoupper($httpMethod) === strtoupper($route['type'])) {
                 $activeRoute['params'] = [];
 

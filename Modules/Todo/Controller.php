@@ -43,4 +43,26 @@ class Controller extends BaseController
             exit();
         }
     }
+    public function edit(): int
+    {
+        $fields = json_decode(file_get_contents('php://input'), true);
+        try {
+            return $this->model->edit((int)$this->params['id'], $fields);
+        } catch (ExcValidation $e) {
+            http_response_code(422);
+            echo json_encode(['errors' => $e->getErrorsList()]);
+            exit();
+        }
+    }
+
+    public function delete(): bool
+    {
+        try {
+            return $this->model->delete((int)$this->params['id']);
+        } catch (Exc404 $e) {
+            http_response_code(404);
+            echo json_encode(['message' => $e->getMessage()]);
+            exit();
+        }
+    }
 }

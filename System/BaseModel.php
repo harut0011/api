@@ -69,6 +69,34 @@ abstract class BaseModel
         return $this->db->lastInsertId();
     }
 
+    public function edit(int $id, array $fieldsToEdit): bool
+    {   
+        $errors = $this->checkFields($fieldsToEdit);
+        if (!empty($errors)) {
+            throw new ExcValidation($errors);
+        }
+        
+        $fieldsStr = '';
+
+        foreach ($fieldsToEdit as $k => $v) {
+            $fieldsStr .= "$k = :$k";
+        }
+
+        $sql = "UPDATE {$this->table} SET $fieldsStr WHERE {$this->primaryKey} = :id";
+        // echo $sql;
+        // die;
+        $this->db->query($sql, $fieldsToEdit + ['id' => $id]);
+
+        return true;
+    }
+
+    public function delete(int $id): bool
+    {
+        $sql = "DELETE FROM {$this->table} WHERE {$this->primaryKey} = :id";
+        $this->db->query($sql, ['id' => $id]);
+        return true;
+    }
+
     protected function checkFields(array $fields): array
     {
         $errors = [];
