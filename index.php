@@ -13,6 +13,8 @@ use System\Modules;
 $url = $_GET['systemqueryurl'];
 if ($url === '') $url = 'todos';
 
+$httpMethod = $_SERVER['REQUEST_METHOD'];
+
 try {
     $modules = new Modules();
     $modules->add(new Todo);
@@ -21,13 +23,14 @@ try {
     
     $modules->registerRoutes($router);
     
-    $activeRoute = $router->findRoute($url);
+    $activeRoute = $router->findRoute($url, $httpMethod);
 
     $className = $activeRoute['class'];
     $c = new $className;
     $m = $activeRoute['method'];
     
-    $c->$m();
+    $data = $c->$m();
+    echo json_encode($data);
 } catch (Exc404 $e) {
     echo $e->getMessage();
 }

@@ -24,7 +24,7 @@ class DbConnection
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
         ]);
     }
-
+    
     public function query(string $sql, array $params = []): PDOStatement
     {
         $query = $this->db->prepare($sql);

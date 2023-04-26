@@ -8,6 +8,7 @@ class Controller extends BaseController
 {
     public function index()
     {
-        
+        $model = Model::getInstance();
+        return $model->all();
     }
 }
