@@ -1,13 +1,18 @@
 <?php
 
+session_start();
+
 header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json');
+
+// login/password:  admin/admin123
 
 require_once(__DIR__ . '/init.php');
 
 use System\Exceptions\Exc404;
 use System\Router;
 use Modules\Todo\Module as Todo;
+use Modules\User\Module as User;
 use System\Modules;
 
 $url = $_GET['systemqueryurl'];
@@ -18,6 +23,7 @@ $httpMethod = $_SERVER['REQUEST_METHOD'];
 try {
     $modules = new Modules();
     $modules->add(new Todo);
+    $modules->add(new User);
     
     $router = new Router(BASE_URL);
     

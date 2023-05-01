@@ -10,8 +10,9 @@ abstract class BaseModel
     public static $instance;
     protected string $table = '';
     protected string $primaryKey = '';
+    protected array $necessaryFields = [];
 
-    public static function getInstance(): static
+    public static function getInstance()
     {
         if (static::$instance === null) {
             static::$instance = new static();
@@ -100,15 +101,23 @@ abstract class BaseModel
     protected function checkFields(array $fields): array
     {
         $errors = [];
+        
+        if ($fields === null || empty($fields)) {
+            $errors[] = 'Empty data';
+        }
+
+        foreach ($this->necessaryFields as $necessaryField) {
+            if ($fields[$necessaryField]) {
+                $errors[] = "Some necessary fields don\'t exist ($necessaryField)";
+            }
+        }
+        
         foreach ($fields as $k => $v) {
             if (trim($v) === '') {
                 $errors[] = "Field $k is empty";
             }
-            if (mb_strlen(trim($v)) <= 2) {
-                $errors[] = "Field $k has not enough symbols. Minimum 2";
-            }
         }
-
+        
         return $errors;
     }
 }
